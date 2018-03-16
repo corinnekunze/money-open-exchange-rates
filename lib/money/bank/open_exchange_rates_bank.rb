@@ -10,8 +10,16 @@ class Money
     class NoAppId < StandardError ; end
 
     class OpenExchangeRatesBank < Money::Bank::VariableExchange
-
-      OER_URL = 'http://openexchangerates.org/latest.json'
+      # Using new endpoint to maintain old money version compatability
+      BASE_URL = 'http://openexchangerates.org/api/'.freeze
+      # OpenExchangeRates urls
+      OER_URL = URI.join(BASE_URL, 'latest.json')
+      OER_HISTORICAL_URL = URI.join(BASE_URL, 'historical/')
+      # OpenExchangeRates secure url
+      SECURE_OER_URL = OER_URL.clone
+      SECURE_OER_URL.scheme = 'https'
+      SECURE_OER_HISTORICAL_URL = OER_HISTORICAL_URL.clone
+      SECURE_OER_HISTORICAL_URL.scheme = 'https'
 
       attr_accessor :cache, :app_id
       attr_reader :doc, :oer_rates, :rates_expiration, :ttl_in_seconds
